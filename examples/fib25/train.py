@@ -46,7 +46,7 @@ def train():
     request.add_volume_request(VolumeTypes.LOSS_SCALE, constants.output_shape)
 
     data_sources = list()
-    fibsem_dir = "/groups/turaga/turagalab/data/FlyEM/fibsem_medulla_7col"
+    fibsem_dir = "/home/ubuntu/data/FlyEM/fibsem_medulla_7col"
     for volume_name in (
         "tstvol-520-1-h5",
     ):
