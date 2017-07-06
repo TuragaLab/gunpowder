@@ -1,5 +1,7 @@
 import logging
 
+import numpy as np
+
 from .batch_provider import BatchProvider
 from gunpowder.batch import Batch
 from gunpowder.coordinate import Coordinate
@@ -47,17 +49,16 @@ class DvidSource(BatchProvider):
         self.specified_resolution = resolution
         self.node_service = None
         self.dims = 0
-        self.spec = ProviderSpec()
+        self.resolutions = {}
 
     def setup(self):
-        self.spec.roi = self.__get_roi(self.raw_array_name)
-        if self.gt_array_name is not None:
-            self.spec.gt_roi = self.__get_roi(self.gt_array_name)
-            self.spec.has_gt = True
-        else:
-            self.spec.has_gt = False
-        self.spec.has_gt_mask = self.gt_mask_roi_name is not None
-
+        self.spec = ProviderSpec()
+        offset = (1000, 2000, 2000)
+        shape = (5000, 2000, 3000)
+        self.ndims = len(shape)
+        for volume_type in (VolumeTypes.RAW, VolumeTypes.GT_LABELS, VolumeTypes.GT_MASK):
+            self.spec.volumes[volume_type] = Roi(offset, shape)
+            self.resolutions[volume_type] = self.specified_resolution
         logger.info("DvidSource.spec:\n{}".format(self.spec))
 
     def get_spec(self):
