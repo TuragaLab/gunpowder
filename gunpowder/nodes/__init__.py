@@ -20,4 +20,5 @@ from .reject import Reject
 from .simple_augment import SimpleAugment
 from .snapshot import Snapshot
 from .split_and_renumber_segmentation_labels import SplitAndRenumberSegmentationLabels
+from .typecast import Typecast
 from .zero_out_const_sections import ZeroOutConstSections
