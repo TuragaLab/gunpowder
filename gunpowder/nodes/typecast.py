@@ -22,6 +22,14 @@ class Typecast(BatchFilter):
             if volume.data.dtype is not desired_dtype:
                 type_casted = volume.data.astype(desired_dtype)
                 if self.safe:
-                    np.testing.assert_array_equal(volume.data, type_casted)
+                    data_involves_floats = any(np.issubdtype(dtype, float) for dtype in (volume.data.dtype, desired_dtype))
+                    try:
+                        if data_involves_floats:
+                            np.testing.assert_allclose(volume.data, type_casted, atol=0.000001)
+                        else:
+                            np.testing.assert_array_equal(volume.data, type_casted)
+                    except:
+                        logger.error("Failed to typecast {} from {} to {}".format(volume_type, volume.data.dtype, desired_dtype))
+                        raise
                 volume.data = type_casted
-                logger.debug("Casting volume type {0} to {1}".format(volume_type, desired_dtype))
+                logger.debug("Casting volume type {} to {}".format(volume_type, desired_dtype))
